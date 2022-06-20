@@ -20,7 +20,21 @@ const DUMMY_MEETUPS = [
 ];
 
 const HomePage = props => {
-  return <MeetupList meetups={DUMMY_MEETUPS} />;
+  return <MeetupList meetups={props.meetups} />;
 };
+
+// can execute any code that would normallly only run on server using
+// getStaticProps i.e. access file system, securely connect to database
+// The code here will never execute on the client side, cuz it is
+// executed during the build process
+
+export async function getStaticProps() {
+  // fetch data from an API
+  return {
+    props: {
+      meetups: DUMMY_MEETUPS
+    }
+  }
+}
 
 export default HomePage;
