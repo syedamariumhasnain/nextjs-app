@@ -23,7 +23,7 @@ const HomePage = props => {
   return <MeetupList meetups={props.meetups} />;
 };
 
-
+// ===>> Static Site Generation (SSG) <<===
 // ===>> getStaticProps <<===
 
 // can execute any code that would normallly only run on server using
@@ -50,7 +50,7 @@ export async function getStaticProps() {
   }
 }
 
-
+// ===>> Server-side Rendering (SSR) <<===
 // ===>> Alternative of getStaticProps (getServerSideProps) <<===
 
 // this function will not run during the build process but instead always 
