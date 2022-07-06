@@ -1,5 +1,5 @@
-import { MongoClient } from "mongodb";
 import MeetupList from "../components/meetups/MeetupList";
+import dbConnect from "../utils/dbConnect";
 
 const DUMMY_MEETUPS = [
   {
@@ -51,14 +51,10 @@ export async function getStaticProps() {
   // & defining it somewhere else. Instead we can do it directly, here.
   // It will not be the part of client-side bundle.
 
-  const client = await MongoClient.connect(
-    `mongodb+srv://marium:marium27@cluster0.q2val.mongodb.net/meetups_db?retryWrites=true&w=majority`
-  );
-  const db = client.db();
-  const meetupsCollection = db.collection('meetups');
+  const { client, meetupsCollection } = await dbConnect();
 
   const meetups = await meetupsCollection.find().toArray();
-    client.close();
+  client.close();
 
   return {
     props: {

@@ -1,4 +1,4 @@
-import { MongoClient } from "mongodb";
+import dbConnect from "../../utils/dbConnect";
 
 // These JS files are not about defining, rendering or returning React Component
 // Instead it define functions that contain server-side code, cuz they only
@@ -15,12 +15,7 @@ async function handler(req, res) {
     // const { title, image, address, description } = data;
 
     try {
-      const client = await MongoClient.connect(
-        `mongodb+srv://marium:marium27@cluster0.q2val.mongodb.net/meetups_db?retryWrites=true&w=majority`
-      );
-      const db = client.db();
-
-      const meetupsCollection = db.collection('meetups');
+      const { client, meetupsCollection } = await dbConnect();
       const result = await meetupsCollection.insertOne(data);
   
       console.log(result);
