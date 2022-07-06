@@ -1,3 +1,4 @@
+import { MongoClient } from "mongodb";
 import MeetupList from "../components/meetups/MeetupList";
 
 const DUMMY_MEETUPS = [
@@ -42,9 +43,32 @@ const HomePage = props => {
 
 export async function getStaticProps() {
   // fetch data from an API
+  // In Next JS, we can also use fetch() on server side code snippets
+  // as well. Normally, we can only use it in the browser. 
+  
+  // fetch("/api/meetups");
+  // Doing this makes the redundent code cuz we are calling our own api
+  // & defining it somewhere else. Instead we can do it directly, here.
+  // It will not be the part of client-side bundle.
+
+  const client = await MongoClient.connect(
+    `mongodb+srv://marium:marium27@cluster0.q2val.mongodb.net/meetups_db?retryWrites=true&w=majority`
+  );
+  const db = client.db();
+  const meetupsCollection = db.collection('meetups');
+
+  const meetups = await meetupsCollection.find().toArray();
+    client.close();
+
   return {
     props: {
-      meetups: DUMMY_MEETUPS
+      meetups: meetups.map(meetup => ({
+        title: meetup.title,
+        address: meetup.address,
+        image: meetup.image,
+        description: meetup.description,
+        id: meetup._id.toString()
+      }))
     },
     revalidate: 10
   }
