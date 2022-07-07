@@ -48,9 +48,21 @@ export async function getStaticPaths() {
 
   const meetups = await meetupsCollection.find({}, { _id: 1 }).toArray();
   client.close();
+ 
+  // ===> fallback:  
+  // true OR "blocking" means we are telling Next JS there might be 
+  // more pages other than that we have defined here. And Next JS 
+  // generates that page on demand and there-after cashe it.
 
+  // Difference b/w true and blocking is that;
+  // -- true => will immediately return an empty page, and pull down
+  // the dynamically generated content once that's done. So you need
+  // to handle the case that the page doesn't have the data yet.
+  // -- blocking => the user will not see anything until yhe page 
+  // was pre-generated and the finished page will be served.
+    
   return {
-    fallback: false,
+    fallback: "blocking", 
     paths: meetups.map(meetup => ({
       params: { meetupId: meetup._id.toString() }
     }))
